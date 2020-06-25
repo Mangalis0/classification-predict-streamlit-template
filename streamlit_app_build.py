@@ -42,7 +42,14 @@ def main():
 
     if selection == 'Information':
         st.info('General Information')
-        st.markdown('Explore Explorer Explorest.....boooom EXPLODE!!!!!!!!!!!')
+        st.write('Explorers Explore and.....boooom EXPLODE!!!!!!!!!!!')
+        st.markdown(""" We have deployed Machine Learning models that are able to classify 
+        whether or not a person believes in climate change, based on their novel tweet data. 
+        Like any data lovers, these are robust solutions to that can provide access to a 
+        broad base of consumer sentiment, spanning multiple demographic and geographic categories. 
+        So, do you have a Twitter API and ready to scrap? or just have some tweets off the top of your head? 
+        Do explore the rest of this app's buttons.
+        """)
 
         raw = st.checkbox('See raw data')
         if raw:
@@ -73,69 +80,67 @@ def main():
 
         data_source = ['Select option', 'Single text', 'Dataset'] ## differentiating between a single text and a dataset inpit
 
-        source_selection = st.selectbox('Choose Option', data_source)
+        source_selection = st.selectbox('What to classify?', data_source)
 
-    if source_selection == 'Single text':
-        ### SINGLE TWEET CLASSIFICATION ###
-        st.subheader('Single tweet classification')
-        st.write('Classyfing a single text')
+        if source_selection == 'Single text':
+            ### SINGLE TWEET CLASSIFICATION ###
+            st.subheader('Single tweet classification')
 
-        text_input = st.text_area('Enter Text:', 'Type Here') ##user entering a single text to classify and predict
+            text_input = st.text_area('Enter Text:') ##user entering a single text to classify and predict
 
-        if st.button('Classify'):
+            if st.button('Classify'):
 
-            vect_text = tweet_cv.transform([text_input]).toarray()##using tfidf to clean and preprocess
+                vect_text = tweet_cv.transform([text_input]).toarray()##using tfidf to clean and preprocess
 
-            predictor = joblib.load(open(os.path.join('resources/Logistic_regression.pkl'),'rb')) ##opening the stored model
+                predictor = joblib.load(open(os.path.join('resources/Logistic_regression.pkl'),'rb')) ##opening the stored model
 
-            prediction = predictor.predict(vect_text)##making prediction
+                prediction = predictor.predict(vect_text)##making prediction
 
-            prediction_dict = {'negative':-1,'Neutral':0, 'Positive':1}
-            
-            st.success('Result:  {}'.format(prediction))
+                prediction_dict = {'negative':-1,'Neutral':0, 'Positive':1}
+                
+                st.success('Result:  {}'.format(prediction))
 
-    if source_selection == 'Dataset':
-        ### DATASET CLASSIFICATION ###
-        st.subheader('Dataset tweet classification')
-        st.write('Classyfing a dataset')
+        if source_selection == 'Dataset':
+            ### DATASET CLASSIFICATION ###
+            st.subheader('Dataset tweet classification')
 
-        text_input = st.file_uploader("Choose a CSV file", type="csv")
-        if text_input is not None:
-            text_input = pd.read_csv(text_input)
-        #st.write(df)
-    
+            text_input = st.file_uploader("Choose a CSV file", type="csv")
+            if text_input is not None:
+                text_input = pd.read_csv(text_input)
+            #st.write(df)
         
-        if st.button('Classify'):
-
-            #classifier = st.selectbox('Which algorithm?', alg)
-            #if classifier=='Decision Tree':
-
-            vect_text = tweet_cv.transform([text_input]).toarray()##using tfidf to clean and preprocess
-
-            predictor = joblib.load(open(os.path.join('resources/Logistic_regression.pkl'),'rb')) ##opening the stored model
-
-            prediction = predictor.predict(vect_text)##making prediction
-
-            prediction_dict = {'negative':-1,'Neutral':0, 'Positive':1}
             
-            st.success('Result:  {}'.format(prediction))
+            if st.button('Classify'):
+
+                #classifier = st.selectbox('Which algorithm?', alg)
+                #if classifier=='Decision Tree':
+
+                vect_text = tweet_cv.transform([text_input]).toarray()##using tfidf to clean and preprocess
+
+                predictor = joblib.load(open(os.path.join('resources/Logistic_regression.pkl'),'rb')) ##opening the stored model
+
+                prediction = predictor.predict(vect_text)##making prediction
+
+                prediction_dict = {'negative':-1,'Neutral':0, 'Positive':1}
+                
+                st.success('Result:  {}'.format(prediction))
 
 
 
-            for i,j in prediction_dict.items():
-                if prediction == i:
-                    st.success('Tweet has a {}'.format(j), 'Sentiment Towards Climate change')
+                for i,j in prediction_dict.items():
+                    if prediction == i:
+                        st.success('Tweet has a {}'.format(j), 'Sentiment Towards Climate change')
 
     ##contact page
     if selection == 'Contact App Developers':
 
-        st.info('Contact details if you any query:')
+        st.info('Contact details in case you any query or would like to know more of our designs:')
         st.write('Kea: Lefifikea@gmail.com')
         st.write('Noxolo: Kheswanl925@gmail.com')
         st.write('Sam: makhoba808@gmail.com')
         st.write('Neli: cenygal@gmail.com')
-        st.write('Ife: ifeadeoni@gmail.com')
         st.write('Khathu: netsiandakhathutshelo2@gmail.com')
+        st.write('Ife: ifeadeoni@gmail.com')
 
 if __name__ == '__main__':
 	main()
