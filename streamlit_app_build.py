@@ -21,12 +21,19 @@ def main():
     """Tweets classifier App"""
 
     st.title('Tweets  Unclassified  :)')
+
+    from PIL import Image
+    image = Image.open('resources/imgs/Tweeter.png')
+
+    st.image(image, caption='Which Tweet are you?', use_column_width=True)
+
     st.subheader('Climate Change Belief Analysis: Based on Tweets')
+    
 
     ##creating a sidebar for selection purposes
 
 
-    pages = ['Information', 'Make Prediction', 'Contact App Developers']
+    pages = ['Information', 'Visuals', 'Make Prediction', 'Contact App Developers']
 
     selection = st.sidebar.selectbox('Select Option', pages)
 
@@ -35,6 +42,22 @@ def main():
     if selection == 'Information':
         st.info('General Information')
         st.markdown('Explore Explorer Explorest.....boooom EXPLODE!!!!!!!!!!!')
+
+    ## Charts page
+
+    if selection == 'Visuals':
+        st.info('The following are some of the charts that we have created from the raw data')
+        #st.markdown(''' The following are some of the charts that we have 
+               #     created from the raw data''')
+
+        import altair as alt
+
+        data = pd.DataFrame(raw_data, columns=['sentiment'])
+
+        st.write(data)
+        st.write(alt.Chart(data).mark_bar().encode(
+            x=alt.data('sentiment', sort=None),
+            y='no_of_tweets'))
 
     ## prediction page
 
@@ -71,12 +94,12 @@ def main():
     if selection == 'Contact App Developers':
 
         st.info('Contact details if you any query:')
-        st.write('kea: Lefifikea@gmail.com')
-        st.write('Noxolo: ')
-        st.write('Sam: ')
-        st.write('Neli:')
-        st.write('Ife: ')
-        st.write('Khathu: ')
+        st.write('Kea: Lefifikea@gmail.com')
+        st.write('Noxolo: Kheswanl925@gmail.com')
+        st.write('Sam: makhoba808@gmail.com')
+        st.write('Neli: cenygal@gmail.com')
+        st.write('Ife: ifeadeoni@gmail.com')
+        st.write('Khathu: netsiandakhathutshelo2@gmail.com')
 
 if __name__ == '__main__':
 	main()
