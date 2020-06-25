@@ -51,6 +51,7 @@ def main():
         Do explore the rest of this app's buttons.
         """)
 
+
         raw = st.checkbox('See raw data')
         if raw:
             st.dataframe(data.head(25))
