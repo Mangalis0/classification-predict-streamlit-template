@@ -83,37 +83,49 @@ def main():
 
         source_selection = st.selectbox('What to classify?', data_source)
 
+        # Load Our Models
+        def load_prediction_models(model_file):
+            loaded_models = joblib.load(open(os.path.join(model_file),"rb"))
+            return loaded_models
+
+        # Getting the predictions
+        def get_keys(val,my_dict):
+            for key,value in my_dict.items():
+                if val == value:
+                    return key
+
+
         if source_selection == 'Single text':
             ### SINGLE TWEET CLASSIFICATION ###
             st.subheader('Single tweet classification')
 
-            text_input = st.text_area('Enter Text:') ##user entering a single text to classify and predict
+            input_text = st.text_area('Enter Text:') ##user entering a single text to classify and predict
             all_ml_models = ["LR","NB","RFOREST","DECISION_TREE"]
             model_choice = st.selectbox("Choose ML Model",all_ml_models)
-            prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':3}
+            prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':2}
             if st.button('Classify'):
 
                 st.text("Original test ::\n{}".format(input_text))
                 vect_text = tweet_cv.transform([input_text]).toarray()
                 if model_choice == 'LR':
-                    predictor = load_prediction_models("resources/newsclassifier_Logit_model.pkl")
+                    predictor = load_prediction_models("resources/Logistic_regression.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'RFOREST':
-                    predictor = load_prediction_models("resources/newsclassifier_RFOREST_model.pkl")
+                    predictor = load_prediction_models("resources/RFOREST_model.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'NB':
-                    predictor = load_prediction_models("resources/newsclassifier_NB_model.pkl")
+                    predictor = load_prediction_models("resources/NB_model.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'DECISION_TREE':
-                    predictor = load_prediction_models("resources/newsclassifier_CART_model.pkl")
+                    predictor = load_prediction_models("resources/DTrees_model.pkl")
                     prediction = predictor.predict(vect_text)
 				# st.write(prediction)
 
                 final_result = get_keys(prediction,prediction_labels)
-                st.success("News Categorized as:: {}".format(final_result))
+                st.success("Tweet Categorized as:: {}".format(final_result))
 
         if source_selection == 'Dataset':
             ### DATASET CLASSIFICATION ###
@@ -121,39 +133,39 @@ def main():
 
             all_ml_models = ["LR","NB","RFOREST","DECISION_TREE"]
             model_choice = st.selectbox("Choose ML Model",all_ml_models)
-            prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':3}
+            prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':2}
             text_input = st.file_uploader("Choose a CSV file", type="csv")
             if text_input is not None:
                 text_input = pd.read_csv(text_input)
             
             if st.button('Classify'):
 
-                st.text("Original test ::\n{}".format(input_text))
-                vect_text = tweet_cv.transform([input_text]).toarray()
+                st.text("Original test ::\n{}".format(text_input))
+                vect_text = tweet_cv.transform([text_input]).toarray()
                 if model_choice == 'LR':
-                    predictor = load_prediction_models("resources/newsclassifier_Logit_model.pkl")
+                    predictor = load_prediction_models("resources/Logistic_regression.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'RFOREST':
-                    predictor = load_prediction_models("resources/newsclassifier_RFOREST_model.pkl")
+                    predictor = load_prediction_models("resources/RFOREST_model.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'NB':
-                    predictor = load_prediction_models("resources/newsclassifier_NB_model.pkl")
+                    predictor = load_prediction_models("resources/NB_model.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'DECISION_TREE':
-                    predictor = load_prediction_models("resources/newsclassifier_CART_model.pkl")
+                    predictor = load_prediction_models("resources/DTrees_model.pkl")
                     prediction = predictor.predict(vect_text)
 				# st.write(prediction)
 
                 final_result = get_keys(prediction,prediction_labels)
-                st.success("News Categorized as:: {}".format(final_result))
+                st.success("Tweets Categorized as:: {}".format(final_result))
 
 
-                for i,j in prediction_dict.items():
-                    if prediction == i:
-                        st.success('Tweet has a {}'.format(j), 'Sentiment Towards Climate change')
+                #for i,j in prediction_dict.items():
+                   # if prediction == i:
+                    #    st.success('Tweet has a {}'.format(j), 'Sentiment Towards Climate change')
 
     ##contact page
     if selection == 'Contact App Developers':
