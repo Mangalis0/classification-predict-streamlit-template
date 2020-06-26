@@ -63,6 +63,7 @@ def main():
         #st.markdown(''' The following are some of the charts that we have created from the raw data''')
 
         import plotly.express as px
+        st.write('Distribution of the sentimental views around climate change')
         f = px.histogram(data['sentiment'])
         f.update_xaxes(title="sentiment")
         f.update_yaxes(title="No. of tweets")
@@ -72,6 +73,21 @@ def main():
         st.write("where 0 represents Neutral views ")
         st.write("where 1 represents Positive views ")
         st.write(" and where 2 represents News outlets ")
+
+        # Popular Tags
+        st.write('Popular tags found in the tweets')
+        import seaborn as sns
+        import re
+        import numpy as np
+        data['users'] = [''.join(re.findall(r'@\w{,}', line)) if '@' in line else np.nan for line in data.message]
+        
+        sns.countplot(y="users", hue="sentiment", data=data,
+                    order=data.users.value_counts().iloc[:20].index, palette='PRGn') 
+        plt.ylabel('User')
+        plt.xlabel('Number of Tags')
+        plt.title('Top 20 Most Popular Tags')
+
+        st.pyplot()
 
     ## prediction page
 
