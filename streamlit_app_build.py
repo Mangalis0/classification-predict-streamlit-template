@@ -67,9 +67,18 @@ def main():
         import numpy as np
 
        # Number of Messages Per Sentiment
-        st.write('Distribution of the sentimental views around climate change')
+        st.write('Distribution of the sentiments')
         # Labeling the target
         data['sentiment'] = [['Negative', 'Neutral', 'Positive', 'News'][x+1] for x in data['sentiment']]
+        
+        # checking the distribution
+        st.write('The numerical proportion of the sentiments')
+        values = data['sentiment'].value_counts()/data.shape[0]
+        labels = (data['sentiment'].value_counts()/data.shape[0]).index
+        plt.pie(x=values, labels=labels, autopct='%1.1f%%', startangle=90, explode= (0.04, 0, 0, 0))
+        st.pyplot()
+        
+        # checking the distribution
         sns.countplot(x='sentiment' ,data = data, palette='PRGn')
         plt.ylabel('Count')
         plt.xlabel('Sentiment')
@@ -84,7 +93,23 @@ def main():
         plt.ylabel('User')
         plt.xlabel('Number of Tags')
         plt.title('Top 20 Most Popular Tags')
+        st.pyplot()
 
+        # Tweet lengths
+        st.write('The length of the sentiments')
+        sns.barplot(x=['sentiment'], y=['message'].apply(len), data = data, palette='PRGn')
+        plt.ylabel('Length')
+        plt.xlabel('Sentiment')
+        plt.title('Average Length of Message by Sentiment')
+        st.pyplot()
+
+        # Generating the word cloud image from all the messages
+        from wordcloud import WordCloud, ImageColorGenerator
+        text = " ".join(tweet for tweet in data.message)   # Combining all the messages
+        wordcloud = WordCloud(background_color="white").generate(text)
+        # Displaying the word cloud image using matplotlib:
+        plt.imshow(wordcloud, interpolation='bilinear')
+        plt.axis("off")
         st.pyplot()
 
     ## prediction page
