@@ -138,7 +138,7 @@ def main():
             ### SINGLE TWEET CLASSIFICATION ###
             st.subheader('Single tweet classification')
 
-            input_text = st.text_area('Enter Text:') ##user entering a single text to classify and predict
+            input_text = st.text_area('Enter Text (max. 140 characters):') ##user entering a single text to classify and predict
             all_ml_models = ["LR","NB","RFOREST","DECISION_TREE"]
             model_choice = st.selectbox("Choose ML Model",all_ml_models)
             prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':2}
