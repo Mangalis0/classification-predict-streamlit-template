@@ -10,6 +10,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from imblearn.over_sampling import SMOTE
 
+import seaborn as sns
+import re
+
+
 ##reading in the raw data and its cleaner
 
 vectorizer = open('resources/tfidfvect.pkl','rb')   ##  will be replaced by the cleaning and preprocessing function
@@ -36,7 +40,7 @@ def main():
 
     pages = ['Information', 'Visuals', 'Make Prediction', 'Contact App Developers']
 
-    selection = st.sidebar.selectbox('Select Option', pages)
+    selection = st.sidebar.radio('Go To', pages)
 
     ##information page
 
@@ -62,9 +66,7 @@ def main():
         st.info('The following are some of the charts that we have created from the raw data')
 
     
-        import seaborn as sns
-        import re
-        import numpy as np
+        
 
        # Number of Messages Per Sentiment
         st.write('Distribution of the sentiments')
@@ -141,6 +143,9 @@ def main():
             input_text = st.text_area('Enter Text (max. 140 characters):') ##user entering a single text to classify and predict
             all_ml_models = ["LR","NB","RFOREST","DECISION_TREE"]
             model_choice = st.selectbox("Choose ML Model",all_ml_models)
+
+            st.info('for more information on the above ML Models please visit: https://datakeen.co/en/8-machine-learning-algorithms-explained-in-human-language/')
+
             prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':2}
             if st.button('Classify'):
 
@@ -172,10 +177,18 @@ def main():
 
             all_ml_models = ["LR","NB","RFOREST","DECISION_TREE"]
             model_choice = st.selectbox("Choose ML Model",all_ml_models)
+
+            st.info('for more information on the above ML Models please visit: https://datakeen.co/en/8-machine-learning-algorithms-explained-in-human-language/')
+
+
             prediction_labels = {'Negative':-1,'Neutral':0,'Positive':1,'News':2}
             text_input = st.file_uploader("Choose a CSV file", type="csv")
             if text_input is not None:
                 text_input = pd.read_csv(text_input)
+
+            uploaded_dataset = st.checkbox('See uploaded dataset')
+            if uploaded_dataset:
+                st.dataframe(text_input.head(25))
             
             if st.button('Classify'):
 
@@ -196,6 +209,8 @@ def main():
                 elif model_choice == 'DECISION_TREE':
                     predictor = load_prediction_models("resources/DTrees_model.pkl")
                     prediction = predictor.predict(vect_text)
+
+                
 				# st.write(prediction)
 
                 final_result = get_keys(prediction,prediction_labels)
