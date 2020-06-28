@@ -40,7 +40,11 @@ def main():
 
     pages = ['Information', 'Visuals', 'Make Prediction', 'Contact App Developers']
 
-    selection = st.sidebar.radio('Go To', pages)
+    selection = st.sidebar.radio('Go to....', pages)
+
+    #st.sidebar.image(image, caption='Which Tweet are you?', use_column_width=True)
+
+
 
     ##information page
 
@@ -189,11 +193,15 @@ def main():
             uploaded_dataset = st.checkbox('See uploaded dataset')
             if uploaded_dataset:
                 st.dataframe(text_input.head(25))
+
+            col = st.text_area('Enter column to classify')
+
+            #col_class = text_input[col]
             
             if st.button('Classify'):
 
                 st.text("Original test ::\n{}".format(text_input))
-                vect_text = tweet_cv.transform([text_input]).toarray()
+                vect_text = tweet_cv.transform([text_input[col]]).toarray()
                 if model_choice == 'LR':
                     predictor = load_prediction_models("resources/Logistic_regression.pkl")
                     prediction = predictor.predict(vect_text)
@@ -210,16 +218,20 @@ def main():
                     predictor = load_prediction_models("resources/DTrees_model.pkl")
                     prediction = predictor.predict(vect_text)
 
+
                 
 				# st.write(prediction)
-
+                text_input['sentiment'] = prediction
                 final_result = get_keys(prediction,prediction_labels)
                 st.success("Tweets Categorized as:: {}".format(final_result))
 
+                
+                csv = text_input.to_csv(index=False)
+                b64 = base64.b64encode(csv.encode()).decode()  # some strings <-> bytes conversions necessary here
+                href = f'<a href="data:file/csv;base64,{b64}">Download csv file</a>'
 
-                #for i,j in prediction_dict.items():
-                   # if prediction == i:
-                    #    st.success('Tweet has a {}'.format(j), 'Sentiment Towards Climate change')
+                st.markdown(href, unsafe_allow_html=True)
+
 
     ##contact page
     if selection == 'Contact App Developers':
