@@ -9,9 +9,57 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from imblearn.over_sampling import SMOTE
+#from textblob import TextBlob
+import re
+from nltk.corpus import stopwords
+from nltk.stem.wordnet import WordNetLemmatizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+from nltk.stem import PorterStemmer
+from nltk.tokenize import word_tokenize
+from nlppreprocess import NLP # pip install nlppreprocess
+import en_core_web_sm
+from nltk import pos_tag
 
 import seaborn as sns
 import re
+
+from nltk import pos_tag
+#import nltk
+
+#nltk.download()
+
+from nlppreprocess import NLP
+nlp = NLP()
+
+def cleaner(line):
+
+    # Removes RT, url and trailing white spaces
+    line = re.sub(r'^RT ','', re.sub(r'https://t.co/\w+', '', line).strip()) 
+
+    # Removes puctuation
+    punctuation = re.compile("[.;:!\'’‘“”?,\"()\[\]]")
+    tweet = punctuation.sub("", line.lower()) 
+
+    # Removes stopwords
+    nlp_for_stopwords = NLP(replace_words=True, remove_stopwords=True, remove_numbers=True, remove_punctuations=False) 
+    tweet = nlp_for_stopwords.process(tweet) # This will remove stops words that are not necessary. The idea is to keep words like [is, not, was]
+    # https://towardsdatascience.com/why-you-should-avoid-removing-stopwords-aa7a353d2a52
+
+    # tokenisation
+    # We used the split method instead of the word_tokenise library because our tweet is already clean at this point
+    # and the twitter data is not complicated
+    tweet = tweet.split() 
+
+    # POS 
+    pos = pos_tag(tweet)
+
+
+    # Lemmatization
+    lemmatizer = WordNetLemmatizer()
+    tweet = ' '.join([lemmatizer.lemmatize(word, po[0].lower()) if po[0].lower() in ['n', 'r', 'v', 'a'] else word for word, po in pos])
+    # tweet = ' '.join([lemmatizer.lemmatize(word, 'v') for word in tweet])
+
+    return tweet
 
 
 ##reading in the raw data and its cleaner
@@ -103,14 +151,14 @@ def main():
 
         # Tweet lengths
         st.write('The length of the sentiments')
-        sns.barplot(x=['sentiment'], y=['message'].apply(len), data = data, palette='PRGn')
+        sns.barplot(x=['sentiment'], y=data['message'].apply(len), data = data, palette='PRGn')
         plt.ylabel('Length')
         plt.xlabel('Sentiment')
         plt.title('Average Length of Message by Sentiment')
         st.pyplot()
 
         # Generating the word cloud image from all the messages
-        from wordcloud import WordCloud, ImageColorGenerator
+        from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
         text = " ".join(tweet for tweet in data.message)   # Combining all the messages
         wordcloud = WordCloud(background_color="white").generate(text)
         # Displaying the word cloud image using matplotlib:
@@ -154,7 +202,8 @@ def main():
             if st.button('Classify'):
 
                 st.text("Original test ::\n{}".format(input_text))
-                vect_text = tweet_cv.transform([input_text]).toarray()
+                text1 = cleaner(input_text) ###passing the text through the 'cleaner' function
+                vect_text = tweet_cv.transform([text1]).toarray()
                 if model_choice == 'LR':
                     predictor = load_prediction_models("resources/Logistic_regression.pkl")
                     prediction = predictor.predict(vect_text)
@@ -190,18 +239,26 @@ def main():
             if text_input is not None:
                 text_input = pd.read_csv(text_input)
 
+            #X = text_input.drop(columns='tweetid', axis = 1, inplace = True)   
+
             uploaded_dataset = st.checkbox('See uploaded dataset')
             if uploaded_dataset:
                 st.dataframe(text_input.head(25))
 
             col = st.text_area('Enter column to classify')
 
+            col_list = list(text_input[col])
+
+            #low_col[item.lower() for item in tweet]
+            #X = text_input[col]
+
             #col_class = text_input[col]
             
             if st.button('Classify'):
 
                 st.text("Original test ::\n{}".format(text_input))
-                vect_text = tweet_cv.transform([text_input[col]]).toarray()
+                X1 = text_input[col].apply(cleaner) ###passing the text through the 'cleaner' function
+                vect_text = tweet_cv.transform([X1]).toarray()
                 if model_choice == 'LR':
                     predictor = load_prediction_models("resources/Logistic_regression.pkl")
                     prediction = predictor.predict(vect_text)
