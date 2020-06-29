@@ -4,11 +4,9 @@ import streamlit as st
 import joblib, os
 
 ## data dependencies
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from imblearn.over_sampling import SMOTE
 #from textblob import TextBlob
 import re
 from nltk.corpus import stopwords
@@ -16,7 +14,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
-from nlppreprocess import NLP # pip install nlppreprocess
+#from nlppreprocess import NLP # pip install nlppreprocess
 #import en_core_web_sm
 from nltk import pos_tag
 
