@@ -108,7 +108,7 @@ def main():
     ## Charts page
 
     if selection == 'Visuals':
-        st.info('The following are some of the charts that we have created from the raw data. Some of the text is too long and may cut off, feel free to right click on the chart and either sav it or open in in a new window to see it properly.')
+        st.info('The following are some of the charts that we have created from the raw data. Some of the text is too long and may cut off, feel free to right click on the chart and either save it or open it in a new window to see it properly.')
 
 
        # Number of Messages Per Sentiment
