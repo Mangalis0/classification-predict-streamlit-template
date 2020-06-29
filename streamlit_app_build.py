@@ -352,6 +352,8 @@ def main():
         st.write('Khathu: netsiandakhathutshelo2@gmail.com')
         st.write('Ife: ifeadeoni@gmail.com')
 
+    # streamlit --version
+
 if __name__ == '__main__':
 	main()
 

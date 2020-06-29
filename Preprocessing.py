@@ -48,7 +48,7 @@ def cleaner(line):
     line = emojis.sub(r'', line)
     # Removes puctuation
     punctuation = re.compile("[.;:!\'’‘“”?,\"()\[\]]")
-    tweet = punctuation.sub("", line.lower()) 
+    tweet = punctuation.sub("", line) 
     # print("After puctuation:\n", tweet, '\n'*2)
 
     # Removes stopwords
@@ -69,8 +69,8 @@ def cleaner(line):
 
     # Lemmatization
     lemmatizer = WordNetLemmatizer()
-    tweet = ' '.join([lemmatizer.lemmatize(word, po[0].lower()) 
-                      if (po[0].lower() in ['n', 'r', 'v', 'a'] and word[0] != '@') else word for word, po in pos])
+    tweet = ' '.join([lemmatizer.lemmatize(word, po[0]) 
+                      if (po[0] in ['n', 'r', 'v', 'a'] and word[0] != '@') else word for word, po in pos])
     # print("After Lemmatization:\n", tweet, '\n'*2)
 
     return tweet
