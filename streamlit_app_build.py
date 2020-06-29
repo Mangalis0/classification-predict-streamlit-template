@@ -339,10 +339,10 @@ def main():
         st.write('Khathu: netsiandakhathutshelo2@gmail.com')
         st.write('Ife: ifeadeoni@gmail.com')
 
-    # Footer 
-    image = Image.open('resources/imgs/EDSA_logo.png')
+        # Footer 
+        image = Image.open('resources/imgs/EDSA_logo.png')
 
-    st.image(image, caption='Team-SS4-Johannesbrug', use_column_width=True)
+        st.image(image, caption='Team-SS4-Johannesbrug', use_column_width=True)
 
 if __name__ == '__main__':
 	main()
