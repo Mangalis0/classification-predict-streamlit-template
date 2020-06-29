@@ -81,7 +81,8 @@ def main():
         st.write('The numerical proportion of the sentiments')
         values = data['sentiment'].value_counts()/data.shape[0]
         labels = (data['sentiment'].value_counts()/data.shape[0]).index
-        plt.pie(x=values, labels=labels, autopct='%1.1f%%', startangle=90, explode= (0.04, 0, 0, 0))
+        colors = ['lightgreen', 'blue', 'purple', 'lightsteelblue']
+        plt.pie(x=values, labels=labels, autopct='%1.1f%%', startangle=90, explode= (0.04, 0, 0, 0), colors=colors)
         st.pyplot()
         
         # checking the distribution
@@ -103,20 +104,41 @@ def main():
 
         # Tweet lengths
         st.write('The length of the sentiments')
-        sns.barplot(x=['sentiment'], y=['message'].apply(len), data = data, palette='PRGn')
-        plt.ylabel('Length')
-        plt.xlabel('Sentiment')
-        plt.title('Average Length of Message by Sentiment')
+        st.write('The average Length of Messages in all Sentiments is 100 which is of no surprise as tweets have a limit of 140 characters.')
+
+        # Repeated tags
+        
+        # Generating Counts of users
+        st.write("Analysis of hashtags in the messages")
+        counts = data[['message', 'users']].groupby('users', as_index=False).count().sort_values(by='message', ascending=False)
+        values = [sum(np.array(counts['message']) == 1)/len(counts['message']), sum(np.array(counts['message']) != 1)/len(counts['message'])]
+        labels = ['First Time Tags', 'Repeated Tags']
+        colors = ['lightsteelblue', "purple"]
+        plt.pie(x=values, labels=labels, autopct='%1.1f%%', startangle=90, explode= (0.04, 0), colors=colors)
         st.pyplot()
 
-        # Generating the word cloud image from all the messages
-        from wordcloud import WordCloud, ImageColorGenerator
-        text = " ".join(tweet for tweet in data.message)   # Combining all the messages
-        wordcloud = WordCloud(background_color="white").generate(text)
-        # Displaying the word cloud image using matplotlib:
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis("off")
+        # Popular hashtags
+        st.write("The Amount of popular hashtags")
+        repeated_tags_rate = round(sum(np.array(counts['message']) > 1)*100/len(counts['message']), 1)
+        print(f"{repeated_tags_rate} percent of the data are from repeated tags")
+        sns.countplot(y="users", hue="sentiment", data=data, palette='PRGn',
+              order=data.users.value_counts().iloc[:20].index) 
+        plt.ylabel('User')
+        plt.xlabel('Number of Tags')
+        plt.title('Top 20 Most Popular Tags')
         st.pyplot()
+
+
+        # Generating graphs for the tags
+        st.write('Analysis of most popular tags, sorted by populariy')
+        sns.countplot(x="users", data=data[data['sentiment'] == 'Positive'],
+                    order=data[data['sentiment'] == 'Positive'].users.value_counts().iloc[:20].index) 
+
+        plt.xlabel('User')
+        plt.ylabel('Number of Tags')
+        plt.title('Top 20 Positive Tags')
+        plt.xticks(rotation=85)
+        plt.show()
 
     ## prediction page
 
