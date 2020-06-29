@@ -17,16 +17,11 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from nltk.stem import PorterStemmer
 from nltk.tokenize import word_tokenize
 from nlppreprocess import NLP # pip install nlppreprocess
-import en_core_web_sm
+#import en_core_web_sm
 from nltk import pos_tag
 
 import seaborn as sns
 import re
-
-from nltk import pos_tag
-#import nltk
-
-#nltk.download()
 
 from nlppreprocess import NLP
 nlp = NLP()
@@ -115,7 +110,7 @@ def main():
     ## Charts page
 
     if selection == 'Visuals':
-        st.info('The following are some of the charts that we have created from the raw data')
+        st.info('The following are some of the charts that we have created from the raw data. Some of the text is too long and may cut off, feel free to right click on the chart and either sav it or open in in a new window to see it properly.')
 
     
         
@@ -174,24 +169,22 @@ def main():
         plt.ylabel('User')
         plt.xlabel('Number of Tags')
         plt.title('Top 20 Most Popular Tags')
-        sns.barplot(x=['sentiment'], y=data['message'].apply(len), data = data, palette='PRGn')
-        plt.ylabel('Length')
-        plt.xlabel('Sentiment')
-        plt.title('Average Length of Message by Sentiment')
         st.pyplot()
 
         # Generating the word cloud image from all the messages
-        from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
-        text = " ".join(tweet for tweet in data.message)   # Combining all the messages
-        wordcloud = WordCloud(background_color="white").generate(text)
+        #from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
+        #text = " ".join(tweet for tweet in data.message)   # Combining all the messages
+        #wordcloud = WordCloud(background_color="white").generate(text)
         # Displaying the word cloud image using matplotlib:
-        plt.imshow(wordcloud, interpolation='bilinear')
-        plt.axis("off")
-        st.pyplot()
+        #plt.imshow(wordcloud, interpolation='bilinear')
+        #plt.axis("off")
+        #st.pyplot()
 
+        st.markdown("Now that we've had a look at the tweets themselves as well as the users, we now analyse the hastags:")
 
         # Generating graphs for the tags
         st.write('Analysis of most popular tags, sorted by populariy')
+        # Analysis of most popular tags, sorted by populariy
         sns.countplot(x="users", data=data[data['sentiment'] == 'Positive'],
                     order=data[data['sentiment'] == 'Positive'].users.value_counts().iloc[:20].index) 
 
@@ -199,7 +192,30 @@ def main():
         plt.ylabel('Number of Tags')
         plt.title('Top 20 Positive Tags')
         plt.xticks(rotation=85)
-        plt.show()
+        st.pyplot()
+
+        # Analysis of most popular tags, sorted by populariy
+        st.write("Analysis of most popular tags, sorted by populariy")
+        sns.countplot(x="users", data=data[data['sentiment'] == 'Negative'],
+                    order=data[data['sentiment'] == 'Negative'].users.value_counts().iloc[:20].index) 
+
+        plt.xlabel('User')
+        plt.ylabel('Number of Tags')
+        plt.title('Top 20 Negative Tags')
+        plt.xticks(rotation=85)
+        st.pyplot()
+
+
+        st.write("Analysis of most popular tags, sorted by populariy")
+        # Analysis of most popular tags, sorted by populariy
+        sns.countplot(x="users", data=data[data['sentiment'] == 'News'],
+                    order=data[data['sentiment'] == 'News'].users.value_counts().iloc[:20].index) 
+
+        plt.xlabel('User')
+        plt.ylabel('Number of Tags')
+        plt.title('Top 20 News Tags')
+        plt.xticks(rotation=85)
+        st.pyplot()
 
     ## prediction page
 
