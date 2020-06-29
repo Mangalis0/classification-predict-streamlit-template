@@ -110,8 +110,6 @@ def main():
     if selection == 'Visuals':
         st.info('The following are some of the charts that we have created from the raw data. Some of the text is too long and may cut off, feel free to right click on the chart and either sav it or open in in a new window to see it properly.')
 
-    
-        
 
        # Number of Messages Per Sentiment
         st.write('Distribution of the sentiments')
@@ -168,15 +166,6 @@ def main():
         plt.xlabel('Number of Tags')
         plt.title('Top 20 Most Popular Tags')
         st.pyplot()
-
-        # Generating the word cloud image from all the messages
-        #from wordcloud import WordCloud, ImageColorGenerator, STOPWORDS
-        #text = " ".join(tweet for tweet in data.message)   # Combining all the messages
-        #wordcloud = WordCloud(background_color="white").generate(text)
-        # Displaying the word cloud image using matplotlib:
-        #plt.imshow(wordcloud, interpolation='bilinear')
-        #plt.axis("off")
-        #st.pyplot()
 
         st.markdown("Now that we've had a look at the tweets themselves as well as the users, we now analyse the hastags:")
 
@@ -296,7 +285,7 @@ def main():
 
             col = st.text_area('Enter column to classify')
 
-            col_list = list(text_input[col])
+            #col_list = list(text_input[col])
 
             #low_col[item.lower() for item in tweet]
             #X = text_input[col]
@@ -350,7 +339,10 @@ def main():
         st.write('Khathu: netsiandakhathutshelo2@gmail.com')
         st.write('Ife: ifeadeoni@gmail.com')
 
-    # streamlit --version
+    # Footer 
+    image = Image.open('resources/imgs/EDSA_logo.png')
+
+    st.image(image, caption='Team-SS4-Johannesbrug', use_column_width=True)
 
 if __name__ == '__main__':
 	main()
