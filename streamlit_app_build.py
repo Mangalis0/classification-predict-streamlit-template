@@ -266,7 +266,7 @@ def main():
             ### DATASET CLASSIFICATION ###
             st.subheader('Dataset tweet classification')
 
-            all_ml_models = ["LR","NB","RFOREST","DECISION_TREE"]
+            all_ml_models = ["LR","NB","RFOREST","SupportVectorMachine", "MLR", "LDA"]
             model_choice = st.selectbox("Choose ML Model",all_ml_models)
 
             st.info('for more information on the above ML Models please visit: https://datakeen.co/en/8-machine-learning-algorithms-explained-in-human-language/')
@@ -302,17 +302,24 @@ def main():
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'RFOREST':
-                    predictor = load_prediction_models("resources/RFOREST_model.pkl")
+                    predictor = load_prediction_models("resources/Random_model.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
                 elif model_choice == 'NB':
                     predictor = load_prediction_models("resources/NB_model.pkl")
                     prediction = predictor.predict(vect_text)
                     # st.write(prediction)
-                elif model_choice == 'DECISION_TREE':
-                    predictor = load_prediction_models("resources/DTrees_model.pkl")
+                elif model_choice == 'SupportVectorMachine':
+                    predictor = load_prediction_models("resources/svm_model.pkl")
                     prediction = predictor.predict(vect_text)
 
+                elif model_choice == 'MLR':
+                    predictor = load_prediction_models("resources/mlr_model.pkl")
+                    prediction = predictor.predict(vect_text)
+
+                elif model_choice == 'SupportVectorMachine':
+                    predictor = load_prediction_models("resources/simple_lda_model.pkl")
+                    prediction = predictor.predict(vect_text)
 
                 
 				# st.write(prediction)
